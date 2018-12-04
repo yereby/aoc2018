@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-function findIds(list: Array<string>) {
+function findIds(list: Array<string>): number {
   let total = new Map()
 
   list.forEach(item => {
@@ -31,14 +31,48 @@ function findIds(list: Array<string>) {
   return total.get(2) * total.get(3)
 }
 
+function findCorrectBox(list: Array<string>): string {
+  let arr = new Array()
+  let res = new Array()
+
+  arr = list.map(item => {
+    const res = [...item]
+    return res
+  })
+
+  arr.map((a, i) => {
+    let index = new Array()
+
+    arr.map((b) => {
+      a.map((letter: string, j: number) => {
+        if (letter !== b[j]) {
+          index.push(j)
+        }
+      })
+
+      if (index.length === 1) {
+        res.push(a, b)
+      }
+      index = []
+    })
+  })
+
+  res.splice(2)
+
+  const result = res[0].filter((item: string, i: number) => {
+    if (res[1][i] !== item) { return }
+    return item
+  })
+
+  return result.join('')
+}
+
 fs.readFile(path.join(__dirname, '../input/day2.txt'), 'utf-8', (err: string, data: string) => {
   const input: Array<string> = data.trim().split('\n')
-
-  //const input = ['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab']
 
   const result1 = findIds(input)
   console.log('Result 1 :', result1)
 
-  const result2 = 2
+  const result2 = findCorrectBox(input)
   console.log('Result 2 :', result2)
 })
